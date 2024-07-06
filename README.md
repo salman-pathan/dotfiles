@@ -15,7 +15,9 @@ You may need to install some dependencies for the configurations to work correct
 7. `fzf`
 8. `neovim`
 9. `wezterm`
-10. `Commit Mono Nerd Font`
+10. `fisher`
+11. `lazygit`
+12. `Commit Mono Nerd Font`
 
 ## Customizing
 
