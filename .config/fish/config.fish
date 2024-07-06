@@ -7,6 +7,7 @@ set TERM "xterm-256color"                         # Sets the terminal type
 
 ### ALIASES ###
 alias vim='nvim'
+alias lg='lazygit'
 
 # Changing "ls" to "eza"
 alias ls='eza -al --color=always --group-directories-first' # my preferred listing
