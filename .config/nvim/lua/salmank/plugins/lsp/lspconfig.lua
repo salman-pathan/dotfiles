@@ -1,25 +1,26 @@
 return {
-  "neovim/nvim-lspconfig",
+	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		{ "folke/neodev.nvim", opts = {} },
 	},
-  config = function()
-    local lspconfig = require('lspconfig')
-    local mason_lspconfig = require('mason-lspconfig')
-    local cmp_nvim_lsp = require('cmp_nvim_lsp')
+	config = function()
+		local lspconfig = require("lspconfig")
+		local mason_lspconfig = require("mason-lspconfig")
+		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-    local keymap = vim.keymap
+		local keymap = vim.keymap
 
-    vim.api.nvim_create_autocmd("LspAttach", {
-      group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-      callback = function(ev)
-        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+			callback = function(ev)
+				local client = vim.lsp.get_client_by_id(ev.data.client_id)
 				if vim.tbl_contains({ "null-ls" }, client.name) then
 					return
 				end
+
 				require("lsp_signature").on_attach({
 					bind = true,
 					handler_opts = {
@@ -27,7 +28,7 @@ return {
 					},
 				}, ev.buf)
 
-        local opts = { buffer = ev.buf, silent = true }
+				local opts = { buffer = ev.buf, silent = true }
 
 				-- set keybinds
 				opts.desc = "Show LSP references"
@@ -68,10 +69,10 @@ return {
 
 				opts.desc = "Restart LSP"
 				keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
-      end,
-    })
+			end,
+		})
 
-    local capabilities = cmp_nvim_lsp.default_capabilities()
+		local capabilities = cmp_nvim_lsp.default_capabilities()
 
 		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 		for type, icon in pairs(signs) do
@@ -79,7 +80,7 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-    mason_lspconfig.setup_handlers({
+		mason_lspconfig.setup_handlers({
 			-- default handler for installed servers
 			function(server_name)
 				lspconfig[server_name].setup({
@@ -118,10 +119,13 @@ return {
 					},
 				})
 			end,
+			["clangd"] = function()
+				lspconfig["clangd"].setup({
+					capabilities = capabilities,
+				})
+			end,
 		})
 
 		lspconfig.gopls.setup({})
-
-
-  end
+	end,
 }
